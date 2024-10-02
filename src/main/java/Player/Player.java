@@ -1,5 +1,7 @@
 package Player;
 
+import Enemies.Enemy;
+
 public class Player {
     // instance variables
     private final int maxHealth;
@@ -35,7 +37,7 @@ public class Player {
     }
 
     // methods
-    public void attack() {
+    public void attack(Enemy enemy) {
     }
 
     public void takeDamage(int amount) {
