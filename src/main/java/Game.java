@@ -9,6 +9,6 @@ public class Game {
         NormalEnemy enemy = new NormalEnemy("Rat", 6);
 
         Battle battle = new Battle(player, enemy);
-        battle.playerTurn();
+        battle.battleController();
     }
 }

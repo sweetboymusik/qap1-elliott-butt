@@ -18,18 +18,40 @@ public class Battle {
     }
 
     public void battleController() {
-        while (true) {
-            playerTurn();
-            enemyTurn();
+        int turn = 1;
+        Combatant winner;
+
+        System.out.println("Fight!");
+
+        while (player.isAlive() && enemy.isAlive()) {
+            System.out.println();
+            System.out.println("-------- Turn " + turn + " --------");
+
+
+            if (player.isAlive()) {
+                playerTurn();
+            }
+
+            if (enemy.isAlive()) {
+                enemyTurn();
+            }
+
+            turn++;
         }
+
+        winner = player.isAlive() ? player : enemy;
+        endBattle(winner);
     }
 
-    public void playerTurn() {
+    private void playerTurn() {
         // reset player defending state
         player.setDefending(false);
 
         // display action menu for player
-        System.out.println("Player Turn: ");
+        messageDelay(500);
+        System.out.println();
+        System.out.print("Player Turn: ");
+        System.out.print(player.getName() + " (HP: " + player.getHealth() + "/" + player.getMaxHealth() + ")\n");
         System.out.println("1. Attack - 2. Defend - 3. Special - 4. Heal ");
         System.out.print("Enter your option: ");
 
@@ -41,7 +63,7 @@ public class Battle {
                 attack(player, enemy, false);
                 break;
             case 2:
-                player.defend();
+                defend(player);
                 break;
             case 3:
                 attack(player, enemy, true);
@@ -52,7 +74,21 @@ public class Battle {
         }
     }
 
-    public void attack(Combatant attacker, Combatant defender, boolean special) {
+    private void enemyTurn() {
+        enemy.setDefending(false);
+
+        // display action menu for player
+        messageDelay(500);
+        System.out.println();
+        System.out.print("Enemy Turn: ");
+        System.out.print(enemy.getName() + " (HP: " + enemy.getHealth() + "/" + enemy.getMaxHealth() + ")\n");
+        messageDelay(500);
+
+        attack(enemy, player, false);
+
+    }
+
+    private void attack(Combatant attacker, Combatant defender, boolean special) {
         int damageTaken = 0;
 
         if (special) {
@@ -61,10 +97,39 @@ public class Battle {
             damageTaken = defender.takeDamage(attacker.getStrength());
         }
 
-        System.out.print(defender.getName() + " took " + damageTaken + " damage from" + attacker.getName());
-        System.out.println("New defender health: " + defender.getHealth());
+        System.out.print("Attacking");
+        messageBreak();
+        System.out.println(defender.getName() + " took " + damageTaken + " damage from " + attacker.getName() + "!");
     }
 
-    public void enemyTurn() {
+    private void defend(Combatant combatant) {
+        combatant.defend();
+        System.out.println(combatant.getName() + " defended!");
+        System.out.println();
+    }
+
+
+    private void messageDelay(int delay) {
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void messageBreak() {
+        for (int i = 0; i < 3; i++) {
+            System.out.print(".");
+            messageDelay(300);
+        }
+
+        System.out.print(" ");
+    }
+
+    private void endBattle(Combatant combatant) {
+        messageDelay(500);
+        System.out.println();
+        System.out.println(combatant.getName() + " has won! Battle has ended.");
     }
 }
+

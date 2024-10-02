@@ -82,6 +82,14 @@ public class Player implements Combatant {
         this.defending = defending;
     }
 
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
     // methods
     public void attack(Enemy enemy) {
     }

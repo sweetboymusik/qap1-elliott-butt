@@ -41,10 +41,27 @@ public abstract class Enemy implements Combatant {
         this.health = health;
     }
 
-    // methods
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    public boolean isDefending() {
+        return defending;
+    }
+
+    public void setDefending(boolean defending) {
+        this.defending = defending;
+    }
+
     public abstract int getStrength();
+
     public abstract int getDefence();
 
+    // methods
     @Override
     public int takeDamage(int damage) {
         int finalDamage = damage;
@@ -61,5 +78,10 @@ public abstract class Enemy implements Combatant {
         }
 
         return finalDamage;
+    }
+
+    @Override
+    public void defend() {
+       this.defending = true;
     }
 }
