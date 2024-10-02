@@ -7,16 +7,19 @@ import Player.Player;
 import java.util.Scanner;
 
 public class Battle {
+    // instance variables
     private final Player player;
     private final Enemy enemy;
     private final Scanner scanner;
 
+    // constructors
     public Battle(Player player, Enemy enemy) {
         this.player = player;
         this.enemy = enemy;
         this.scanner = new Scanner(System.in);
     }
 
+    // battle controller
     public void battleController() {
         int turn = 1;
         Combatant winner;
@@ -58,23 +61,11 @@ public class Battle {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        switch (choice) {
-            case 1:
-                attack(player, enemy, false);
-                break;
-            case 2:
-                defend(player);
-                break;
-            case 3:
-                attack(player, enemy, true);
-                break;
-            case 4:
-                player.heal();
-                break;
-        }
+        battleAction(choice, player, enemy);
     }
 
     private void enemyTurn() {
+        // reset player attack state
         enemy.setDefending(false);
 
         // display action menu for player
@@ -84,10 +75,28 @@ public class Battle {
         System.out.print(enemy.getName() + " (HP: " + enemy.getHealth() + "/" + enemy.getMaxHealth() + ")\n");
         messageDelay(500);
 
-        attack(enemy, player, false);
-
+        int choice = enemy.chooseAction();
+        battleAction(choice, enemy, player);
     }
 
+    private void battleAction(int action, Combatant actor, Combatant target) {
+        switch (action) {
+            case 1:
+                attack(actor, target, false);
+                break;
+            case 2:
+                defend(actor);
+                break;
+            case 3:
+                attack(actor, target, true);
+                break;
+            case 4:
+                heal(actor);
+                break;
+        }
+    }
+
+    // battle actions
     private void attack(Combatant attacker, Combatant defender, boolean special) {
         int damageTaken = 0;
 
@@ -102,13 +111,27 @@ public class Battle {
         System.out.println(defender.getName() + " took " + damageTaken + " damage from " + attacker.getName() + "!");
     }
 
-    private void defend(Combatant combatant) {
-        combatant.defend();
-        System.out.println(combatant.getName() + " defended!");
-        System.out.println();
+    private void defend(Combatant actor) {
+        actor.defend();
+        System.out.print("Defending");
+        messageBreak();
+        System.out.println(actor.getName() + " defended!");
+    }
+
+    private void heal(Combatant actor) {
+        System.out.print("Healing");
+        messageBreak();
+        System.out.println(actor.getName() + " healed!");
     }
 
 
+    private void endBattle(Combatant combatant) {
+        messageDelay(500);
+        System.out.println();
+        System.out.println(combatant.getName() + " has won! Battle has ended.");
+    }
+
+    // helper methods
     private void messageDelay(int delay) {
         try {
             Thread.sleep(delay);
@@ -126,10 +149,6 @@ public class Battle {
         System.out.print(" ");
     }
 
-    private void endBattle(Combatant combatant) {
-        messageDelay(500);
-        System.out.println();
-        System.out.println(combatant.getName() + " has won! Battle has ended.");
-    }
+
 }
 
