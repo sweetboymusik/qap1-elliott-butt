@@ -1,18 +1,23 @@
 package Enemies;
 
+import Misc.Combatant;
 import Player.Player;
 
-public abstract class Enemy {
+public abstract class Enemy implements Combatant {
     // instance variables
     private String name;
     private final int maxHealth;
     private int health;
+    private boolean alive;
+    private boolean defending;
 
     // constructors
     public Enemy(String name, int maxHealth) {
         this.name = name;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
+        this.alive = true;
+        this.defending = false;
     }
 
     // getters and setters
@@ -38,9 +43,23 @@ public abstract class Enemy {
 
     // methods
     public abstract int getStrength();
+    public abstract int getDefence();
 
-    public void attack(Player player) {
-        int strength = getStrength();
-        player.setHealth(strength);
+    @Override
+    public int takeDamage(int damage) {
+        int finalDamage = damage;
+
+        if (defending) {
+            finalDamage = damage - getDefence();
+        }
+
+        this.health -=  finalDamage;
+
+        if (health <= 0) {
+            this.health = 0;
+            this.alive = false;
+        }
+
+        return finalDamage;
     }
 }
