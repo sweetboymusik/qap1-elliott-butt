@@ -43,5 +43,4 @@ public abstract class Enemy {
         int strength = getStrength();
         player.setHealth(strength);
     }
-
 }
