@@ -1,15 +1,16 @@
 import Combatants.Enemy;
 import Combatants.Player;
 import Systems.Battle;
+import Systems.Travel;
 
 public class Game {
     public static void main(String[] args) {
         // battle test code
         Player player = new Player("Elliott", 10, 2, 2, 2);
-        Enemy enemy = new Enemy("Rat", 2, 1, 1, 1, 3);
+        Enemy enemy = new Enemy("Rat", 2, 1, 1, 1, 1, 3);
 
+        Travel travel = new Travel(player);
+        travel.choosePath();
 
-        Battle battle = new Battle(player, enemy);
-        battle.battleController();
     }
 }

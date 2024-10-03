@@ -48,9 +48,6 @@ public class Player extends Combatant {
         int targetExp = level + 2;
         int levelsToGain = 0;
 
-        System.out.println("Temp exp: " + tempExp);
-        System.out.println("Target exp: " + targetExp);
-
         if (tempExp >= targetExp) {
             while (tempExp >= targetExp) {
                 this.exp = tempExp - targetExp;
@@ -87,7 +84,7 @@ public class Player extends Combatant {
         return statUp;
     }
 
-    public int rollStat(){
+    public int rollStat() {
         Random rand = new Random();
         return rand.nextInt(level) + 1;
     }

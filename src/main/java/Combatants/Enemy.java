@@ -2,15 +2,25 @@ package Combatants;
 
 import java.util.Random;
 
-public class Enemy extends Combatant{
+public class Enemy extends Combatant {
+    private int level;
     private int expValue;
 
-    public Enemy(String name, int maxHealth, int strength, int defence, int intelligence, int expValue) {
+    public Enemy(String name, int maxHealth, int strength, int defence, int intelligence, int level, int expValue) {
         super(name, maxHealth, strength, defence, intelligence);
+        this.level = level;
         this.expValue = expValue;
     }
 
     // getters and setters
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public int getExpValue() {
         return expValue;
     }

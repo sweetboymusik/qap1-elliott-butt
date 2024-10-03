@@ -20,15 +20,18 @@ public class Battle {
     }
 
     // battle controller
-    public void battleController() {
+
+    public boolean battleController() {
         int turn = 1;
         Combatant winner;
 
-        System.out.println("Fight!");
+        System.out.println();
+        System.out.println("-------- Battle --------");
+        System.out.println(player.getName() + " (Lv. " + player.getLevel() + ") vs. " + enemy.getName() + " (Lv. " + enemy.getLevel() + ")");
 
         while (player.isAlive() && enemy.isAlive()) {
             System.out.println();
-            System.out.println("-------- Turn " + turn + " --------");
+            System.out.println("--- Turn " + turn + " ---");
 
 
             if (player.isAlive()) {
@@ -43,7 +46,7 @@ public class Battle {
         }
 
         winner = player.isAlive() ? player : enemy;
-        endBattle(winner);
+        return endBattle(winner);
     }
 
     private void playerTurn() {
@@ -52,7 +55,7 @@ public class Battle {
         player.cooldowns();
 
         // display action menu for player
-        messageDelay(500);
+        MessageUtils.messageDelay(500);
         System.out.println();
         System.out.print("Player Turn: ");
         System.out.print(player.getName() + " (HP: " + player.getHealth() + "/" + player.getMaxHealth() + ")\n");
@@ -78,11 +81,11 @@ public class Battle {
         enemy.cooldowns();
 
         // display enemy info
-        messageDelay(500);
+        MessageUtils.messageDelay(500);
         System.out.println();
         System.out.print("Enemy Turn: ");
         System.out.print(enemy.getName() + " (HP: " + enemy.getHealth() + "/" + enemy.getMaxHealth() + ")\n");
-        messageDelay(500);
+        MessageUtils.messageDelay(500);
 
         int choice = enemy.chooseAction();
         battleAction(choice, enemy, player);
@@ -117,7 +120,7 @@ public class Battle {
             damageTaken = defender.takeDamage(attacker.getStrength());
         }
 
-        messageBreak();
+        MessageUtils.messageBreak();
         System.out.println(defender.getName() + " took " + damageTaken + " damage from " + attacker.getName() + "!");
         return true;
     }
@@ -125,7 +128,7 @@ public class Battle {
     private boolean defend(Combatant actor) {
         actor.defend();
         System.out.print("Defending");
-        messageBreak();
+        MessageUtils.messageBreak();
         System.out.println(actor.getName() + " defended!");
         return true;
     }
@@ -142,7 +145,7 @@ public class Battle {
                 return false;
             case 1:
                 System.out.print("Healing");
-                messageBreak();
+                MessageUtils.messageBreak();
                 System.out.println(actor.getName() + " recovered " + actor.getIntelligence() + " HP!");
                 return true;
             default:
@@ -150,8 +153,8 @@ public class Battle {
         }
     }
 
-    private void endBattle(Combatant combatant) {
-        messageDelay(500);
+    private boolean endBattle(Combatant combatant) {
+        MessageUtils.messageDelay(500);
 
         System.out.println();
         System.out.println(combatant.getName() + " has won!");
@@ -161,39 +164,12 @@ public class Battle {
 
             System.out.println(player.getName() + " gained " + enemy.getExpValue() + " experience!");
 
-            if (levelsToGain > 0){
-                int[] statsGained = player.levelUp(levelsToGain);
-                System.out.print("Leveling up");
-                messageBreak();
-                System.out.print("\n");
-                System.out.println(player.getName() + " gained " + statsGained[0] + " max health!");
-                messageDelay(250);
-                System.out.println(player.getName() + " gained " + statsGained[1] + " strength!");
-                messageDelay(250);
-                System.out.println(player.getName() + " gained " + statsGained[2] + " defence!");
-                messageDelay(250);
-                System.out.println(player.getName() + " gained " + statsGained[3] + " intelligence!");
-            }
+            MessageUtils.displayLevelUpMessage(levelsToGain, player);
 
+            return true;
+        } else {
+            return false;
         }
-    }
-
-    // helper methods
-    private void messageDelay(int delay) {
-        try {
-            Thread.sleep(delay);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    private void messageBreak() {
-        for (int i = 0; i < 3; i++) {
-            System.out.print(".");
-            messageDelay(300);
-        }
-
-        System.out.print(" ");
     }
 }
 
