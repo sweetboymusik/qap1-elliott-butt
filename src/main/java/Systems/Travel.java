@@ -72,7 +72,9 @@ public class Travel {
         }
     }
 
-    public void generateBattle() {
+    public Battle generateBattle() {
+        Enemy enemy = spawnEnemy();
+        return new Battle(player, enemy);
     }
 
     public Event[] generatePaths() {
@@ -87,7 +89,15 @@ public class Travel {
         return paths;
     }
 
-    public void spawnEnemy() {
+    public Enemy spawnEnemy() {
+        int maxHealth = random.nextInt(player.getLevel() * 3) + 1;
+        int strength = random.nextInt(player.getLevel()) + 1;
+        int defence = random.nextInt(player.getLevel()) + 1;
+        int intelligence = random.nextInt(player.getLevel()) + 1;
+        int level = random.nextInt(player.getLevel()) + 1;
+        int exp = random.nextInt(player.getLevel()) + 1;
+
+        return new Enemy("Baddie", maxHealth, strength, defence, intelligence, level, exp);
     }
 
     public Event spawnPath() {
@@ -109,8 +119,7 @@ public class Travel {
         System.out.println("an enemy approaches!");
         MessageUtils.messageDelay(500);
 
-        Enemy enemy = new Enemy("Rat", 6, 2, 2, 2, 1, 3);
-        Battle battle = new Battle(player, enemy);
+        Battle battle = generateBattle();
 
         if (battle.battleController()) {
             choosePath();
