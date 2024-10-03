@@ -3,7 +3,7 @@ package Combatants;
 public abstract class Combatant {
     // info
     private String name;
-    private final int maxHealth;
+    private int maxHealth;
     private final int specialMaxCooldown;
     private final int healMaxCooldown;
 
@@ -38,7 +38,6 @@ public abstract class Combatant {
     }
 
     // getters and setters
-
     public String getName() {
         return name;
     }
@@ -49,6 +48,10 @@ public abstract class Combatant {
 
     public int getMaxHealth() {
         return maxHealth;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
     }
 
     public int getSpecialMaxCooldown() {
@@ -132,11 +135,11 @@ public abstract class Combatant {
     }
 
     // methods
-    public void defend(){
+    public void defend() {
         this.defending = true;
     }
 
-    public boolean special(){
+    public boolean special() {
         if (specialCooldown == 0) {
             specialCooldown = specialMaxCooldown;
             return true;
@@ -152,7 +155,7 @@ public abstract class Combatant {
             finalDamage = damage - getDefence();
         }
 
-        this.health -=  finalDamage;
+        this.health -= finalDamage;
 
         if (health <= 0) {
             this.health = 0;
@@ -183,7 +186,7 @@ public abstract class Combatant {
         }
     }
 
-    public void cooldowns(){
+    public void cooldowns() {
         setSpecialCooldown(specialCooldown - 1);
         setHealCooldown(healCooldown - 1);
     }

@@ -152,8 +152,30 @@ public class Battle {
 
     private void endBattle(Combatant combatant) {
         messageDelay(500);
+
         System.out.println();
-        System.out.println(combatant.getName() + " has won! Battle has ended.");
+        System.out.println(combatant.getName() + " has won!");
+
+        if (combatant == player) {
+            int levelsToGain = player.gainExp(enemy.getExpValue());
+
+            System.out.println(player.getName() + " gained " + enemy.getExpValue() + " experience!");
+
+            if (levelsToGain > 0){
+                int[] statsGained = player.levelUp(levelsToGain);
+                System.out.print("Leveling up");
+                messageBreak();
+                System.out.print("\n");
+                System.out.println(player.getName() + " gained " + statsGained[0] + " max health!");
+                messageDelay(250);
+                System.out.println(player.getName() + " gained " + statsGained[1] + " strength!");
+                messageDelay(250);
+                System.out.println(player.getName() + " gained " + statsGained[2] + " defence!");
+                messageDelay(250);
+                System.out.println(player.getName() + " gained " + statsGained[3] + " intelligence!");
+            }
+
+        }
     }
 
     // helper methods
