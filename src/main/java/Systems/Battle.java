@@ -1,8 +1,8 @@
 package Systems;
 
-import Enemies.Enemy;
-import Misc.Combatant;
-import Player.Player;
+import Combatants.Combatant;
+import Combatants.Enemy;
+import Combatants.Player;
 
 import java.util.Scanner;
 
@@ -47,8 +47,9 @@ public class Battle {
     }
 
     private void playerTurn() {
-        // reset player defending state
+        // reset player defending state and cooldowns
         player.setDefending(false);
+        player.cooldowns();
 
         // display action menu for player
         messageDelay(500);
@@ -56,19 +57,27 @@ public class Battle {
         System.out.print("Player Turn: ");
         System.out.print(player.getName() + " (HP: " + player.getHealth() + "/" + player.getMaxHealth() + ")\n");
         System.out.println("1. Attack - 2. Defend - 3. Special - 4. Heal ");
-        System.out.print("Enter your option: ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        while (true) {
+            System.out.print("Enter your option: ");
 
-        battleAction(choice, player, enemy);
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            boolean successfulAction = battleAction(choice, player, enemy);
+
+            if (successfulAction) {
+                break;
+            }
+        }
     }
 
     private void enemyTurn() {
-        // reset player attack state
+        // reset enemy attack state and cooldowns
         enemy.setDefending(false);
+        enemy.cooldowns();
 
-        // display action menu for player
+        // display enemy info
         messageDelay(500);
         System.out.println();
         System.out.print("Enemy Turn: ");
@@ -79,56 +88,94 @@ public class Battle {
         battleAction(choice, enemy, player);
     }
 
-    private void battleAction(int action, Combatant actor, Combatant target) {
-        switch (action) {
-            case 1:
-                attack(actor, target, false);
-                break;
-            case 2:
-                defend(actor);
-                break;
-            case 3:
-                attack(actor, target, true);
-                break;
-            case 4:
-                heal(actor);
-                break;
-        }
+    private boolean battleAction(int action, Combatant actor, Combatant target) {
+        return switch (action) {
+            case 1 -> attack(actor, target, false);
+            case 2 -> defend(actor);
+            case 3 -> attack(actor, target, true);
+            case 4 -> heal(actor);
+            default -> false;
+        };
     }
 
     // battle actions
-    private void attack(Combatant attacker, Combatant defender, boolean special) {
+    private boolean attack(Combatant attacker, Combatant defender, boolean special) {
         int damageTaken = 0;
 
         if (special) {
-            damageTaken = defender.takeDamage(attacker.getStrength() * 2);
+            boolean canSpecial = attacker.special();
+
+            if (canSpecial) {
+                damageTaken = defender.takeDamage(attacker.getStrength() * 2);
+                System.out.print("Special");
+            } else {
+                System.out.println("Special cannot be used for " + attacker.getSpecialCooldown() + " more turn(s).");
+                return false;
+            }
         } else {
+            System.out.print("Attacking");
             damageTaken = defender.takeDamage(attacker.getStrength());
         }
 
-        System.out.print("Attacking");
         messageBreak();
         System.out.println(defender.getName() + " took " + damageTaken + " damage from " + attacker.getName() + "!");
+        return true;
     }
 
-    private void defend(Combatant actor) {
+    private boolean defend(Combatant actor) {
         actor.defend();
         System.out.print("Defending");
         messageBreak();
         System.out.println(actor.getName() + " defended!");
+        return true;
     }
 
-    private void heal(Combatant actor) {
-        System.out.print("Healing");
-        messageBreak();
-        System.out.println(actor.getName() + " healed!");
-    }
+    private boolean heal(Combatant actor) {
+        int canHeal = actor.heal();
 
+        switch (canHeal) {
+            case -1:
+                System.out.println("Already at full health!");
+                return false;
+            case 0:
+                System.out.println("Heal cannot be used for " + actor.getHealCooldown() + " more turn(s).");
+                return false;
+            case 1:
+                System.out.print("Healing");
+                messageBreak();
+                System.out.println(actor.getName() + " recovered " + actor.getIntelligence() + " HP!");
+                return true;
+            default:
+                return false;
+        }
+    }
 
     private void endBattle(Combatant combatant) {
         messageDelay(500);
+
         System.out.println();
-        System.out.println(combatant.getName() + " has won! Battle has ended.");
+        System.out.println(combatant.getName() + " has won!");
+
+        if (combatant == player) {
+            int levelsToGain = player.gainExp(enemy.getExpValue());
+
+            System.out.println(player.getName() + " gained " + enemy.getExpValue() + " experience!");
+
+            if (levelsToGain > 0){
+                int[] statsGained = player.levelUp(levelsToGain);
+                System.out.print("Leveling up");
+                messageBreak();
+                System.out.print("\n");
+                System.out.println(player.getName() + " gained " + statsGained[0] + " max health!");
+                messageDelay(250);
+                System.out.println(player.getName() + " gained " + statsGained[1] + " strength!");
+                messageDelay(250);
+                System.out.println(player.getName() + " gained " + statsGained[2] + " defence!");
+                messageDelay(250);
+                System.out.println(player.getName() + " gained " + statsGained[3] + " intelligence!");
+            }
+
+        }
     }
 
     // helper methods
@@ -148,7 +195,5 @@ public class Battle {
 
         System.out.print(" ");
     }
-
-
 }
 
