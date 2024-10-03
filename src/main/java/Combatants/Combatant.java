@@ -68,6 +68,10 @@ public abstract class Combatant {
 
     public void setHealth(int health) {
         this.health = health;
+
+        if (this.health > maxHealth) {
+            this.health = maxHealth;
+        }
     }
 
     public int getStrength() {
