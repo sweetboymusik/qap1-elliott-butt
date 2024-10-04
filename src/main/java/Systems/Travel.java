@@ -12,11 +12,17 @@ public class Travel {
     private int floor;
     private final Random random;
 
-    // constructor
+    // constructors
     public Travel(Player player) {
         this.player = player;
         this.floor = 1;
         this.random = new Random();
+    }
+
+    public Travel(Player player, Random random) {
+        this.player = player;
+        this.floor = 1;
+        this.random = random;
     }
 
     // getters and setters
