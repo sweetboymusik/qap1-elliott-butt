@@ -10,14 +10,12 @@ public class Travel {
     // instance variables
     private final Player player;
     private int floor;
-    private final Scanner scanner;
     private final Random random;
 
     // constructor
     public Travel(Player player) {
         this.player = player;
         this.floor = 1;
-        this.scanner = new Scanner(System.in);
         this.random = new Random();
     }
 
@@ -26,12 +24,18 @@ public class Travel {
         return player;
     }
 
-    public Scanner getScanner() {
-        return scanner;
+    public int getFloor() {
+        return floor;
+    }
+
+    public void setFloor(int floor) {
+        this.floor = floor;
     }
 
     // methods
     public void choosePath() {
+        Scanner scanner = new Scanner(System.in);
+
         System.out.println("-------- Travel --------");
         System.out.println("Floor: " + this.floor);
         System.out.println();
@@ -66,7 +70,6 @@ public class Travel {
                         expEvent();
                         break;
                 }
-
                 break;
             }
         }

@@ -10,13 +10,11 @@ public class Battle {
     // instance variables
     private final Player player;
     private final Enemy enemy;
-    private final Scanner scanner;
 
     // constructors
     public Battle(Player player, Enemy enemy) {
         this.player = player;
         this.enemy = enemy;
-        this.scanner = new Scanner(System.in);
     }
 
     // battle controller
@@ -49,7 +47,9 @@ public class Battle {
         return endBattle(winner);
     }
 
-    private void playerTurn() {
+    public void playerTurn() {
+        Scanner scanner = new Scanner(System.in);
+
         // reset player defending state and cooldowns
         player.setDefending(false);
         player.cooldowns();
@@ -75,7 +75,7 @@ public class Battle {
         }
     }
 
-    private void enemyTurn() {
+    public void enemyTurn() {
         // reset enemy attack state and cooldowns
         enemy.setDefending(false);
         enemy.cooldowns();
@@ -91,7 +91,7 @@ public class Battle {
         battleAction(choice, enemy, player);
     }
 
-    private boolean battleAction(int action, Combatant actor, Combatant target) {
+    public boolean battleAction(int action, Combatant actor, Combatant target) {
         return switch (action) {
             case 1 -> attack(actor, target, false);
             case 2 -> defend(actor);
@@ -102,7 +102,7 @@ public class Battle {
     }
 
     // battle actions
-    private boolean attack(Combatant attacker, Combatant defender, boolean special) {
+    public boolean attack(Combatant attacker, Combatant defender, boolean special) {
         int damageTaken = 0;
 
         if (special) {
@@ -125,7 +125,7 @@ public class Battle {
         return true;
     }
 
-    private boolean defend(Combatant actor) {
+    public boolean defend(Combatant actor) {
         actor.defend();
         System.out.print("Defending");
         MessageUtils.messageBreak();
@@ -133,7 +133,7 @@ public class Battle {
         return true;
     }
 
-    private boolean heal(Combatant actor) {
+    public boolean heal(Combatant actor) {
         int canHeal = actor.heal();
 
         switch (canHeal) {
@@ -153,7 +153,7 @@ public class Battle {
         }
     }
 
-    private boolean endBattle(Combatant combatant) {
+    public boolean endBattle(Combatant combatant) {
         MessageUtils.messageDelay(500);
 
         System.out.println();

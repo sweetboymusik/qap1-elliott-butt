@@ -55,7 +55,6 @@ public class Player extends Combatant {
                 targetExp++;
                 levelsToGain++;
             }
-            return levelsToGain;
         } else {
             this.exp = tempExp;
         }

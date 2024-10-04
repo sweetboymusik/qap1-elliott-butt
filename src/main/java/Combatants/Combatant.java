@@ -157,6 +157,9 @@ public abstract class Combatant {
 
         if (defending) {
             finalDamage = damage - getDefence();
+            if (finalDamage <= 0) {
+                finalDamage = 0;
+            }
         }
 
         this.health -= finalDamage;
