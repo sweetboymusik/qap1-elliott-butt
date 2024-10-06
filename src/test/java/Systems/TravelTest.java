@@ -17,7 +17,7 @@ public class TravelTest {
 
     @BeforeEach
     public void setUp() {
-        Player player = new Player("Hero", 100, 10, 5, 3); // Assume appropriate constructor
+        Player player = new Player("Hero", 100, 10, 5, 3);
         travel = new Travel(player, new Random(1));
     }
 
